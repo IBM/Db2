@@ -49,7 +49,7 @@ Add the Secret to the ServiceAccount as an imagePullSecret:
 
 ### Installation of the Chart
 
-Once the pre-install cluster configuration is complete, proceed to install the chart using the script `db2u-install.sh`. The usage is:
+Once the pre-install cluster configuration is complete, proceed to install the chart using the script `db2u-install`. The usage is:
 
 ```
 Db2 Community Edition Installer
