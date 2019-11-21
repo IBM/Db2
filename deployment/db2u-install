@@ -22,7 +22,7 @@ validate(){
         echo "The \"more\" binary must be present to view the license" && \
         exit 1
 
-    helm version ${helm_args} &>/dev/null
+    helm version --tiller-connection-timeout 10 ${helm_args} &>/dev/null
     [[ $? -ne 0 ]] && \
         echo "Unable to connect to tiller using command:" && \
         echo "helm version ${helm_args}" && \
