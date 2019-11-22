@@ -26,25 +26,12 @@ Create a project of your desired name:
 
 Create the Role, RoleBinding, ServiceAccount, and SecurityContextConstraint objects:
 ```
-# oc create -f ./adm/db2u-role.yaml -n <PROJECT-NAME>
-# oc create -f ./adm/db2u-rolebinding.yaml -n <PROJECT-NAME>
-# oc create -f ./adm/db2u-sa.yaml -n <PROJECT-NAME>
-# oc create -f ./adm/db2u-scc.yaml
+# oc create -n <PROJECT-NAME> -f ./adm
 ```
 
 Bind the SecurityContextConstraint to the ServiceAccount:
 ```
 # oc adm policy add-scc-to-user db2u-scc system:serviceaccount:<PROJECT-NAME>:db2u
-```
-
-Create a Secret to authenticate to the DockerHub registry:
-```
-# oc create secret docker-registry registry-secret --docker-username=user --docker-password=<PASSWORD> --docker-email=<EMAIL> -n <PROJECT-NAME>
-```
-
-Add the Secret to the ServiceAccount as an imagePullSecret:
-```
-# oc secrets link db2u registry-secret --for=pull -n <PROJECT-NAME>
 ```
 
 ### Installation of the Chart
@@ -87,8 +74,14 @@ Example:
 
 ### Uninstalling the Chart
 
-To uninstall/delete the deployment:
+To delete the deployment:
 
 ```
 # helm delete <RELEASE-NAME> --purge --tls
+```
+
+To delete the pre-install configuration objects:
+
+```
+# oc delete -n <PROJECT-NAME> -f ./adm
 ```
