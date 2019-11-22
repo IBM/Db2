@@ -78,7 +78,7 @@ images:
     volume:
       name: etcd-stor
       size: 1Gi
-      storageClassName: oketi-gluster
+      storageClassName: ''
       useDynamicProvisioning: false
   instdb:
     image:
