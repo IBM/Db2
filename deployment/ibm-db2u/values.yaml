@@ -62,17 +62,17 @@ images:
   auth:
     image:
       repository: docker.io/ibmcom/db2u.auxiliary.auth
-      tag: v11.5.1.0
+      tag: 11.5.1.0
     replicas: 1
   db2u:
     image:
-      repository: docker.io/ibmcom/db2u
-      tag: v11.5.1.0
+      repository: docker.io/ibmcom/db2
+      tag: 11.5.1.0
     replicas: 1
   etcd:
     image:
-      repository: docker.io/ibmcom/etcd
-      tag: 3.3.10
+      repository: quay.io/coreos/etcd
+      tag: v3.3.10
     storage:
       persisted: true
     volume:
@@ -83,13 +83,13 @@ images:
   instdb:
     image:
       repository: docker.io/ibmcom/db2u.instdb
-      tag: v11.5.1.0
+      tag: 11.5.1.0
     replicas: 1
   pullPolicy: Always
   tools:
     image:
       repository: docker.io/ibmcom/db2u.tools
-      tag: v11.5.1.0
+      tag: 11.5.1.0
     replicas: 1
   universalTag: latest
 ldap:
