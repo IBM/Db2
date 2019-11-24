@@ -12,9 +12,11 @@ This describes how to install Db2 Community Edition into an OpenShift cluster.
   * NFS StorageClass or PersistentVolume
   * hostPath StorageClass or PersistentVolume
 * Resources:
-  * Minimum 4.3 vCPU
-  * Minimum 7.360 Gi Memory
-  
+  * Minimum 3.3 vCPU (2.2 for the Db2 engine and 1.1 for Db2 auxiliary services)
+  * Minimum 5.73 GiB Memory (4GiB for the Db2 engine and 1.73GiB for Db2 auxiliary services)
+
+_Note_: To convert GiB to GB, multiply the GiB value by 1.048.
+
 ## Installation
 
 ### Pre-install cluster configuration
