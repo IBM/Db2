@@ -47,7 +47,7 @@ Usage: ./db2u-install --db-type STRING --namespace STRING --release-name STRING 
 
     Install arguments:
         --db-type STRING            the type of database to deplpy. Must be one of: db2wh, db2oltp (required)
-        --namespace STRING          namespace to install Db2 Community Edition into (required)
+        --namespace STRING          namespace/project to install Db2 Community Edition into (required)
         --release-name STRING       release name for helm (required)
         --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
         --storage-class STRING      StorageClass to use to dynamically provision a volume
@@ -56,7 +56,7 @@ Usage: ./db2u-install --db-type STRING --namespace STRING --release-name STRING 
 
     Helm arguments:
         --tls                       enable TLS for request
-        --tiller-namespace STRING   namespace of Tiller (default "kube-system")
+        --tiller-namespace STRING   namespace/project of Tiller (default "kube-system")
         --tls-ca-cert STRING        path to TLS CA certificate file (default "$HELM_HOME/ca.pem")
         --tls-cert STRING           path to TLS certificate file (default "$HELM_HOME/cert.pem")
         --tls-key STRING            path to TLS key file (default "$HELM_HOME/key.pem")
