@@ -134,23 +134,16 @@ Run the following commands to apply the **container_file_t** SELinux label to th
 # semanage fcontext -a -t container_file_t "<STORAGE-PATH>(/.*)?"
 # restorecon -Rv <STORAGE-PATH>
 ```
-Add a new section to https://github.com/IBM/Db2/tree/develop/deployment.
+
 
 
 # How to create a new LDAP user
-## 1. Allocate the LDAP pod
+## 1. Log in to the LDAP pod
 ``` 
-oc get po | grep ldap | cut -d " " -f 1
+oc rsh $(oc get po | grep ldap | cut -d " " -f 1) /bin/bash
 ```
-Example output:
-```
-db2u-deployment-db2u-ldap-5cf745f7cf-ql6sh
-```
-## 2. Log in to the LDAP pod
-```
-oc rsh <LDAP-pod-name> /bin/bash
-```
-## 3. Find the next available LDAP user ID
+
+## 2. Find the next available LDAP user ID
 ```
 source /opt/ibm/lib/utils.sh
 
@@ -162,7 +155,7 @@ Example output
 ```
 5003
 ```
-## 4. Set up a configuration file 
+## 3. Set up a configuration file 
 Create a configuration file (e.g. */tmp/newuser.ldif*) with following contents:
 ```  
 dn: uid=<user>,ou=People,dc=blustratus,dc=com
@@ -186,7 +179,7 @@ memberuid: uid=<user>,ou=People,dc=blustratus,dc=com
 * gidNumber - **3000** means **admin**; **3002** means **user**
 * Replace *new LDAP uid* with an unused unique LDAP id from the step above. 
 
-## 5. Create the new LDAP user by using the config file
+## 4. Create the new LDAP user by using the config file
 Add the new user using the LDAP root credentials:
 ```
 ldapadd -Z -H ldap:/// -D 'cn=bluldap,dc=blustratus,dc=com' -w "$ldapPassword" -f <config-file>
@@ -200,18 +193,17 @@ adding new entry "uid=ldapuser1,ou=People,dc=blustratus,dc=com"
 modifying entry "cn=bluadmin,ou=Groups,dc=blustratus,dc=com"
 ```
 
-## 6. Set the password for the newly created LDAP user
+## 5. Set the password for the newly created LDAP user
 ```
 ldappasswd -x -Z -H ldap:/// -D "cn=bluldap,dc=blustratus,dc=com" -w "$ldapPassword" -S "uid=<user>,ou=People,dc=blustratus,dc=com" -s <password>
 ```
 
-## 7. Verify the newly created LDAP user and credential
+## 6. Verify the newly created LDAP user and credential
 a) Exit from the LDAP pod
 ```
 exit
 ```
-b) Log in to a db2u pod
-Example: 
+b) Log in to a db2u pod 
 ```
 oc rsh db2u-deployment-db2u-0 /bin/bash
 ```
@@ -220,12 +212,10 @@ c) Verify that the new LDAP user exists
 id <ldap-user>
 ```
 d) Log in to a Db2 instance
-Example:
 ```
 su - db2inst1
 ```
 d) Connect to a database by using the newly created LDAP user:
-Example:
 ```
 db2 connect to bludb user <ldap-user> using <ldap-password>
 ```
