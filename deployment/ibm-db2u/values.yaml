@@ -66,12 +66,12 @@ images:
   auth:
     image:
       repository: db2u.auxiliary.auth
-      tag: v11.5.1.0-CN1
+      tag: 11.5.1.0-CN1
     replicas: 1
   db2u:
     image:
       repository: db2u
-      tag: v11.5.1.0-CN1
+      tag: 11.5.1.0-CN1
     replicas: 1
   etcd:
     image:
@@ -87,13 +87,13 @@ images:
   instdb:
     image:
       repository: db2u.instdb
-      tag: v11.5.1.0-CN1
+      tag: 11.5.1.0-CN1
     replicas: 1
   pullPolicy: IfNotPresent
   tools:
     image:
       repository: db2u.tools
-      tag: v11.5.1.0-CN1
+      tag: 11.5.1.0-CN1
     replicas: 1
   universalTag: latest
 instance:
