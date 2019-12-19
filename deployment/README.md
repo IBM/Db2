@@ -139,13 +139,13 @@ Run the following commands to apply the **container_file_t** SELinux label to th
 
 
 
-# How to create a new LDAP user
-## 1. Log in to the LDAP pod
+## How to create a new LDAP user
+### 1. Log in to the LDAP pod
 ``` 
 oc rsh $(oc get po | grep ldap | cut -d " " -f 1) /bin/bash
 ```
 
-## 2. Find the next available LDAP user ID
+### 2. Find the next available LDAP user ID
 ```
 source /opt/ibm/lib/utils.sh
 
@@ -157,7 +157,7 @@ Example output
 ```
 5003
 ```
-## 3. Set up a configuration file 
+### 3. Set up a configuration file 
 Create a configuration file (e.g. */tmp/newuser.ldif*) with following contents:
 ```  
 dn: uid=<user>,ou=People,dc=blustratus,dc=com
@@ -181,7 +181,7 @@ memberuid: uid=<user>,ou=People,dc=blustratus,dc=com
 * gidNumber - **3000** means **admin**; **3002** means **user**
 * Replace *new LDAP uid* with an unused unique LDAP id from the step above. 
 
-## 4. Create the new LDAP user by using the config file
+### 4. Create the new LDAP user by using the config file
 Add the new user using the LDAP root credentials:
 ```
 ldapadd -Z -H ldap:/// -D 'cn=bluldap,dc=blustratus,dc=com' -w "$ldapPassword" -f <config-file>
@@ -195,12 +195,12 @@ adding new entry "uid=ldapuser1,ou=People,dc=blustratus,dc=com"
 modifying entry "cn=bluadmin,ou=Groups,dc=blustratus,dc=com"
 ```
 
-## 5. Set the password for the newly created LDAP user
+### 5. Set the password for the newly created LDAP user
 ```
 ldappasswd -x -Z -H ldap:/// -D "cn=bluldap,dc=blustratus,dc=com" -w "$ldapPassword" -S "uid=<user>,ou=People,dc=blustratus,dc=com" -s <password>
 ```
 
-## 6. Verify the newly created LDAP user and credential
+### 6. Verify the newly created LDAP user and credential
 a) Exit from the LDAP pod
 ```
 exit
@@ -220,4 +220,55 @@ su - db2inst1
 d) Connect to a database by using the newly created LDAP user:
 ```
 db2 connect to bludb user <ldap-user> using <ldap-password>
+```
+
+## How to apply production license?
+This Db2U deployment comes with the Db2 community license. If you need to convert to the production license, follow steps below.
+
+### 1. Download the entitled license key 
+Follow the link below to download the production license key (e.g. db2adv_vpc.lic) and make it available to your OpenShift master node.
+https://www.ibm.com/support/knowledgecenter/en/SSEPGG_11.5.0/com.ibm.db2.luw.qb.server.doc/doc/r0006748.html
+
+### 2. Check the current Db2 license
+#### a. Find the Db2 installation path from the Db2U pod
+```
+DB2PATH=`oc rsh db2u-deployment-db2u-0 bin/bash -c "db2ls | cut -d ' ' -f 1 | awk 'NR==4'" | sed $'s/[^[:print:]\t]//g'`
+```
+#### b. List the current Db2 license from the Db2 pod
+```
+oc rsh db2u-deployment-db2u-0 /bin/bash -c "$DB2PATH/adm/db2licm -l"
+```
+Output:
+```
+Product name:                     "DB2 Enterprise Server Edition"
+License type:                     "License not registered"
+Expiry date:                      "License not registered"
+Product identifier:               "db2ese"
+Version information:              "11.5"
+
+Product name:                     "IBM DB2 Developer-C Edition"
+License type:                     "Community"
+Expiry date:                      "Permanent"
+Product identifier:               "db2dec"
+Version information:              "11.5"
+Max amount of memory (GB):        "16"
+Max number of cores:              "4"
+Max amount of table space (GB):   "100"
+```
+
+### 3. Apply the production license
+Add steps of configmap update with db2adv_vpc.lic
+
+### 4. Verify the production license
+```
+oc rsh db2u-deployment-db2u-0 /bin/bash -c "$DB2PATH/adm/db2licm -l"
+```
+Output:
+```
+Product name:                     "DB2 Advanced Edition"
+License type:                     "Virtual Processor Core"
+Expiry date:                      "Permanent"
+Product identifier:               "db2adv"
+Version information:              "11.5"
+Enforcement policy:               "Hard Stop"
 ```
