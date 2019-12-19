@@ -70,7 +70,7 @@ images:
     replicas: 1
   db2u:
     image:
-      repository: docker.io/ibmcom/db2u
+      repository: docker.io/ibmcom/db2
       tag: 11.5.1.0-CN1
     replicas: 1
   etcd:
