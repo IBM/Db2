@@ -65,18 +65,18 @@ ibm-unified-console:
 images:
   auth:
     image:
-      repository: db2u.auxiliary.auth
+      repository: docker.io/ibmcom/db2u.auxiliary.auth
       tag: 11.5.1.0-CN1
     replicas: 1
   db2u:
     image:
-      repository: db2u
+      repository: docker.io/ibmcom/db2u
       tag: 11.5.1.0-CN1
     replicas: 1
   etcd:
     image:
-      repository: etcd
-      tag: 3.3.10
+      repository: quay.io/coreos/etcd
+      tag: v3.3.10
     storage:
       persisted: true
     volume:
@@ -86,13 +86,13 @@ images:
       useDynamicProvisioning: false
   instdb:
     image:
-      repository: db2u.instdb
+      repository: docker.io/ibmcom/db2u.instdb
       tag: 11.5.1.0-CN1
     replicas: 1
   pullPolicy: IfNotPresent
   tools:
     image:
-      repository: db2u.tools
+      repository: docker.io/ibmcom/db2u.tools
       tag: 11.5.1.0-CN1
     replicas: 1
   universalTag: latest
@@ -106,15 +106,15 @@ instance:
   db2Support4K: false
   db2Workload: ''
 ldap:
-  enabled: false
+  enabled: true
   ldap_admin: ''
   ldap_admin_group: ''
   ldap_domain: ''
   ldap_server: ''
   ldap_user_group: ''
 limit:
-  cpu: 1000m
-  memory: 8Gi
+  cpu: 2
+  memory: 4Gi
 mln:
   distribution: 0:0
   total: 0
@@ -255,5 +255,5 @@ storage:
   useDynamicProvisioning: false
   userHomeStor:
     existingClaimName: ''
-subType: ''
+subType: 'smp'
 zenServiceInstanceId: ''

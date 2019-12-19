@@ -1,3 +1,1 @@
-
-{{ .Values.global.dbType}} have been installed
-
+Db2 Community Edition is being installed
