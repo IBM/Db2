@@ -47,6 +47,7 @@ Usage: ./db2u-install --db-type STRING --namespace STRING --release-name STRING 
 
     Install arguments:
         --db-type STRING            the type of database to deplpy. Must be one of: db2wh, db2oltp (required)
+        --db-name STRING            the name of database to deplpy. The default value is BLUDB (optional). The length of the value must not exceed 8 characters
         --namespace STRING          namespace/project to install Db2 Community Edition into (required)
         --release-name STRING       release name for helm (required)
         --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
@@ -73,6 +74,7 @@ Example:
 ```
 # ./db2u-install \
     --db-type db2oltp \
+    --db-name MYDB \
     --namespace db2u-project \
     --release-name db2u-release-1 \
     --storage-class managed-nfs-storage
