@@ -10,6 +10,7 @@ LI_FILE=${CUR_DIR}/${CHART}/LICENSES/LICENSE-LI
 
 helm_args=""
 install_args=""
+db_name="BLUDB"
 
 validate(){
     which helm &>/dev/null
@@ -64,6 +65,10 @@ parse_command_line_arguments(){
             --db-type )
                 shift
                 db_type=$1
+                ;;
+            --db-name )
+                shift
+                db_name=$1
                 ;;
             --namespace )
                 shift
@@ -168,6 +173,7 @@ Usage: ./$(basename $0) --db-type STRING --namespace STRING --release-name STRIN
 
     Install arguments:
         --db-type STRING            the type of database to deplpy. Must be one of: db2wh, db2oltp (required)
+        --db-name STRING            the name of database to deplpy. The default value is BLUDB (optional). The length of the value must not exceed 8 characters
         --namespace STRING          namespace/project to install ${PRODUCT} into (required)
         --release-name STRING       release name for helm (required)
         --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
@@ -204,6 +210,7 @@ helm install \
     --set servicename="${release_name}" \
     --set ldap.ldap_server="${release_name}-db2u-ldap" \
     --set global.dbType="${db_type}" \
+    --set database.name="${db_name}" \
     ${CHART}
 
 exit 0
