@@ -9,6 +9,7 @@ securityContext:
     add:
     #Default capabilities, re-add some back
     - "FOWNER"
+    # Glusterfs support
     - "SETGID"
     - "SETUID"
     - "CHOWN"

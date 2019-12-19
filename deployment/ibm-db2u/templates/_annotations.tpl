@@ -1,5 +1,5 @@
 {{- define "db2oltp.annotations" }}
-productName: "Db2 CommunityEdition"
+productName: "Db2 Advanced Edition"
 {{- if ( eq .Values.runtime "ICP4Data" ) }}
 productID: "ICP4D-addon-5725-L47"
 {{- else }}

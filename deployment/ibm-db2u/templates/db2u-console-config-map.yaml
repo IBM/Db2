@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 data:
-  METADB_USER: {{ .Values.database.db2InstanceUser }}
+  METADB_USER: {{ .Values.instance.db2InstanceUser }}
   METADB_HOST: {{ template "fullname" . }}-db2u-engn-svc
   METADB_PORT: "50000"
   METADB_SSL: "false"

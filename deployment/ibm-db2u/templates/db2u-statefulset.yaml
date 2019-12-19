@@ -153,7 +153,7 @@ spec:
           - name: POD_NAMESPACE
             valueFrom:
               fieldRef:
-                fieldPath: metadata.namespace 
+                fieldPath: metadata.namespace
         volumeMounts:
         - mountPath: /mnt/blumeta0
           {{- if .Values.storage.storageLocation.metaStorage.enabled }}
@@ -233,15 +233,20 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
-        - mountPath: /mnt/blumeta0/configmap
+        - mountPath: /mnt/blumeta0/configmap/db2u
           name: {{ template "fullname" . }}-db2u-config-volume
-        - mountPath: /mnt/blumeta0/wv-config
-          name: {{ template "fullname" . }}-config-wv-volume
+        - mountPath: /mnt/blumeta0/configmap/wv
+          name: {{ template "fullname" . }}-db2u-wv-config-volume
+        - mountPath: /mnt/blumeta0/configmap/hadr
+          name: {{ template "fullname" . }}-db2u-hadr-config-volume
         - mountPath: /run
           name: runvol
         - name: db2instance-secret
           mountPath: "/secrets/db2instancepwd"
           readOnly: true
+        - mountPath: /db2u/license
+          name: {{ template "fullname" . }}-db2u-lic-volume
+          readOnly: false
         readinessProbe:
           exec:
             command:
@@ -396,16 +401,22 @@ spec:
       {{- end }}
       - name: {{ template "fullname" . }}-db2u-config-volume
         configMap:
-          name: {{ template "fullname" . }}-db2u-config-files
+          name: {{ template "fullname" . }}-db2u-config
           items:
-          - key: db2u-db2cfg-var
-            path: db2u-config-var
-      - name: {{ template "fullname" . }}-config-wv-volume
+          - key: db2u-var
+            path: db2u-var
+      - name: {{ template "fullname" . }}-db2u-lic-volume
+        configMap:
+          name: {{ template "fullname" . }}-db2u-lic
+          items:
+            - key: db2u-lic
+              path: db2u-lic
+      - name: {{ template "fullname" . }}-db2u-wv-config-volume
         configMap:
           name: {{ template "fullname" . }}-db2u-wv-config
-          items:
-          - key: wolverine-conf
-            path: wv-config-var
+      - name: {{ template "fullname" . }}-db2u-hadr-config-volume
+        configMap:
+          name: {{ template "fullname" . }}-db2u-hadr-config
       - name: db2instance-secret
         secret:
           secretName: {{ template "fullname" . }}-db2u-instance
