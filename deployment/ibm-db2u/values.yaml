@@ -62,12 +62,12 @@ images:
   auth:
     image:
       repository: docker.io/ibmcom/db2u.auxiliary.auth
-      tag: 11.5.1.0
+      tag: 11.5.1.0-CN1
     replicas: 1
   db2u:
     image:
       repository: docker.io/ibmcom/db2
-      tag: 11.5.1.0
+      tag: 11.5.1.0-CN1
     replicas: 1
   etcd:
     image:
@@ -83,13 +83,13 @@ images:
   instdb:
     image:
       repository: docker.io/ibmcom/db2u.instdb
-      tag: 11.5.1.0
+      tag: 11.5.1.0-CN1
     replicas: 1
   pullPolicy: Always
   tools:
     image:
       repository: docker.io/ibmcom/db2u.tools
-      tag: 11.5.1.0
+      tag: 11.5.1.0-CN1
     replicas: 1
   universalTag: latest
 ldap:
