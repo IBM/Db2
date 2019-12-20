@@ -2,7 +2,7 @@
 Check if tag contains specific platform suffix and if not set based on kube platform
 */}}
 {{- define "platform" -}}
-  {{- printf "%s" "" }}
+    {{- printf "" }}
 {{- end -}}
 
 {{/*

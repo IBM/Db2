@@ -101,7 +101,7 @@ spec:
             memory: "2Gi"
         env:
         - name: INSTANCE_NAME
-          value: {{ default "db2inst1" .Values.database.db2InstanceUser | quote }}
+          value: {{ default "db2inst1" .Values.instance.db2InstanceUser | quote }}
         - name: SERVICE_NAME
           value: {{ template "fullname" . }}-db2u-ldap
         - name: LDAP_PWD

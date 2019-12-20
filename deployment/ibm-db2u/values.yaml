@@ -1,33 +1,37 @@
-arch: 'x86_64'
+arch: ''
 baseNamespace: default
 database:
   bluadminPwd: ''
   codeset: UTF-8
   collation: IDENTITY
-  compatibilityVector: 'NULL'
   create: true
-  db2FencedUser: db2fenc1
-  db2InstanceGroup: db2iadm1
-  db2InstancePwd: ''
-  db2InstanceUser: db2inst1
   encrypt: 'YES'
   name: BLUDB
   pageSize: '32768'
   tableOrg: COLUMN
   territory: US
-  workload: ''
-dedicated: false
+dedicated: true
 development: false
 fcm:
   hostnetwork:
     enabled: false
   ips: ''
 global:
-  dbType: ''
+  dbType: db2oltp
   serviceAccount: db2u
 haRecovery: partial
 hadr:
   enabled: false
+  initRole: STANDARD
+  peerWindow: '120'
+  primaryPort: '60006'
+  remoteHost: 'NULL'
+  remoteInstanceUser: db2inst1
+  scope: Namespace
+  standbyPort: '60007'
+  syncMode: NEARSYNC
+  targetList: 'NULL'
+  timeOut: '120'
 ibm-unified-console:
   configMapName: ''
   dataServer:
@@ -43,10 +47,10 @@ ibm-unified-console:
         userHome: home
   disableHostCheck: 'true'
   image:
-    arch: 'x86_64'
-    pullPolicy: Always
+    arch: ''
+    pullPolicy: IfNotPresent
     repository: unified-console
-    tag: icp4d-db2u-339
+    tag: icp4d-db2u
   product: PLATFORM_ICP4D_WH
   resources:
     limits:
@@ -78,22 +82,31 @@ images:
     volume:
       name: etcd-stor
       size: 1Gi
-      storageClassName: ''
+      storageClassName: ""
       useDynamicProvisioning: false
   instdb:
     image:
       repository: docker.io/ibmcom/db2u.instdb
       tag: 11.5.1.0-CN1
     replicas: 1
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   tools:
     image:
       repository: docker.io/ibmcom/db2u.tools
       tag: 11.5.1.0-CN1
     replicas: 1
   universalTag: latest
+instance:
+  db2CompatibilityVector: 'NULL'
+  db2FencedUser: db2fenc1
+  db2InstanceGroup: db2iadm1
+  db2InstanceMemPercent: '80'
+  db2InstancePwd: ''
+  db2InstanceUser: db2inst1
+  db2Support4K: false
+  db2Workload: ''
 ldap:
-  enabled: "true"
+  enabled: true
   ldap_admin: ''
   ldap_admin_group: ''
   ldap_domain: ''
@@ -221,10 +234,10 @@ storage:
         volumeName: tieredvolhot
         volumeType: ''
       tiers:
-      - hot
-      - warm
-      - cool
-      - cold
+        - hot
+        - warm
+        - cool
+        - cold
       warm:
         enabled: false
         hostPath:
