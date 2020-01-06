@@ -257,7 +257,18 @@ Max amount of table space (GB):   "100"
 ```
 
 ### 3. Apply the production license
-Add steps of configmap update with db2adv_vpc.lic
+
+Update `RELEASE_NAME` to the namespace/project where db2 is deploy and `LICENSE_FILE` to the location of the `lic` file
+
+```
+RELEASE_NAME="db2u-cn1"
+LICENSE_FILE="db2adv_vpc.lic"
+oc delete configmap "${RELEASE_NAME}-db2u-lic"
+oc create configmap "${RELEASE_NAME}-db2u-lic" --from-file=db2u-lic=${LICENSE_FILE}
+#Db2 will need to restart to get the license apply.
+#Restart db2u pods to pickup the new configmap and apply the license files.
+oc delete pods "${RELEASE_NAME}-db2u-0"
+```
 
 ### 4. Verify the production license
 ```
