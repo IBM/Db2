@@ -261,8 +261,8 @@ Max amount of table space (GB):   "100"
 Update `RELEASE_NAME` to the namespace/project where db2 is deploy and `LICENSE_FILE` to the location of the `lic` file
 
 ```
-RELEASE_NAME="db2u-cn1"
-LICENSE_FILE="db2adv_vpc.lic"
+RELEASE_NAME="db2u-release-1"
+LICENSE_FILE="./db2adv_vpc.lic"
 oc delete configmap "${RELEASE_NAME}-db2u-lic"
 oc create configmap "${RELEASE_NAME}-db2u-lic" --from-file=db2u-lic=${LICENSE_FILE}
 #Db2 will need to restart to get the license apply.
