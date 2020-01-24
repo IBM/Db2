@@ -48,7 +48,7 @@ Usage: ./db2u-install --db-type STRING --namespace STRING --release-name STRING 
     Install arguments:
         --db-type STRING            the type of database to deplpy. Must be one of: db2wh, db2oltp (required)
         --db-name STRING            the name of database to deplpy. The default value is BLUDB (optional). The length of the value must not exceed 8 characters
-        --namespace STRING          namespace/project to install Db2 Community Edition into (required)
+        --namespace STRING          namespace (project) to install Db2 Community Edition into (required)
         --release-name STRING       release name for helm (required)
         --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
         --storage-class STRING      StorageClass to use to dynamically provision a volume
@@ -80,6 +80,8 @@ Example:
     --storage-class managed-nfs-storage
 ```
 
+Once the job containing the name "restore-morph" is in the state **Completed**, installation is complete and Db2 is ready to use.
+
 ### Uninstalling the Chart
 
 To delete the deployment:
@@ -91,7 +93,7 @@ To delete the deployment:
 To delete the pre-install configuration objects:
 
 ```
-# oc delete -n <PROJECT-NAME> -f ./adm
+# oc delete -n <PROJECT-NAME> sa/db2u role/db2u-role rolebinding/db2u-rolebinding
 ```
 
 ## How to Connect to Db2
