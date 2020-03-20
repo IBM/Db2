@@ -41,7 +41,6 @@ securityContext:
   allowPrivilegeEscalation: true
   runAsNonRoot: false
   runAsUser: 0
-  hostIPC: true
   procMount: Default
   capabilities:
     add:
