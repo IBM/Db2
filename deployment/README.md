@@ -5,8 +5,8 @@ This describes how to install Db2 Community Edition into an OpenShift cluster.
 
 ## Requirements
 * Cluster:
-  * OpenShift version ">=3.10.1" "<4.X"
-  * Helm version ">=2.9" (https://blog.openshift.com/getting-started-helm-openshift/) 
+  * OpenShift version ">=3.10.1"
+  * Helm version ">=3"
   * Cluster Administrator account
 * Storage:
   * NFS version ">=v4.2" StorageClass or PersistentVolume
@@ -56,14 +56,6 @@ Usage: ./db2u-install --db-type STRING --namespace STRING --release-name STRING 
         --memory-size STRING        amount of memory to set at engine pod's request
 
     Helm arguments:
-        --tls                       enable TLS for request
-        --tiller-namespace STRING   namespace/project of Tiller (default "kube-system")
-        --tls-ca-cert STRING        path to TLS CA certificate file (default "$HELM_HOME/ca.pem")
-        --tls-cert STRING           path to TLS certificate file (default "$HELM_HOME/cert.pem")
-        --tls-key STRING            path to TLS key file (default "$HELM_HOME/key.pem")
-        --tls-verify                enable TLS for request and verify remote
-        --home STRING               location of your Helm config. Overrides $HELM_HOME (default "~/.helm")
-        --host STRING               address of Tiller. Overrides $HELM_HOST
         --kube-context STRING       name of the kubeconfig context to use
 
     Miscellaneous arguments:
@@ -87,7 +79,7 @@ Once the job containing the name "restore-morph" is in the state **Completed**, 
 To delete the deployment:
 
 ```
-# helm delete <RELEASE-NAME> --purge --tls
+# helm delete <RELEASE-NAME> --purge
 ```
 
 To delete the pre-install configuration objects:
