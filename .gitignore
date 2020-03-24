@@ -1,0 +1,5 @@
+tmp/
+*.gz
+*.DS_Store
+.idea/*
+.vscode/

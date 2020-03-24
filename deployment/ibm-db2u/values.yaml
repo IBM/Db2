@@ -89,7 +89,7 @@ images:
       repository: docker.io/ibmcom/db2u.instdb
       tag: 11.5.1.0-CN1
     replicas: 1
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tools:
     image:
       repository: docker.io/ibmcom/db2u.tools
@@ -123,6 +123,7 @@ runtime: ICP
 servicename: ''
 setKernelParams: true
 storage:
+  enableVolumeClaimTemplates: false
   catalogStor:
     size: 250Gi
   dataStor:
@@ -134,6 +135,7 @@ storage:
   storageClassName: ''
   storageLocation:
     backupStorage:
+      enablePodLevelClaim: false
       enabled: false
       hostPath:
         path: ''
@@ -148,6 +150,7 @@ storage:
       volumeName: backupvol
       volumeType: ''
     dataStorage:
+      enablePodLevelClaim: false
       enabled: false
       hostPath:
         path: ''
@@ -162,6 +165,7 @@ storage:
       volumeName: datavol
       volumeType: ''
     growthStorage:
+      enablePodLevelClaim: false
       enabled: false
       hostPath:
         path: ''
@@ -191,6 +195,7 @@ storage:
       volumeType: ''
     tieredStorage:
       cold:
+        enablePodLevelClaim: false
         enabled: false
         hostPath:
           path: ''
@@ -205,6 +210,7 @@ storage:
         volumeName: tieredvolcold
         volumeType: ''
       cool:
+        enablePodLevelClaim: false
         enabled: false
         hostPath:
           path: ''
@@ -220,6 +226,7 @@ storage:
         volumeType: ''
       enabled: false
       hot:
+        enablePodLevelClaim: false
         enabled: false
         hostPath:
           path: ''
@@ -239,6 +246,7 @@ storage:
         - cool
         - cold
       warm:
+        enablePodLevelClaim: false
         enabled: false
         hostPath:
           path: ''

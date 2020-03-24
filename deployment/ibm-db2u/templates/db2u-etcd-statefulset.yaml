@@ -9,6 +9,8 @@ metadata:
     component: "etcd"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    icpdsupport/serviceInstanceId: {{ template "fullname" . }}
+    icpdsupport/app: {{ template "fullname" . }}
 spec:
   ports:
   - port: 2380
@@ -27,15 +29,13 @@ kind: StatefulSet
 metadata:
   name: {{ template "fullname" . }}-etcd
   labels:
-    {{- if ( eq .Values.servicename "" ) }}
     app: {{ template "fullname" . }}
-    {{- else }}
-    app: {{ .Values.servicename }}
-    {{- end }}
     chart: "{{ .Chart.Name }}"
     component: "etcd"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    icpdsupport/serviceInstanceId: {{ template "fullname" . }}
+    icpdsupport/app: {{ template "fullname" . }} 
 spec:
   selector:
     matchLabels:
@@ -45,6 +45,7 @@ spec:
       component: "etcd"
   serviceName: {{ template "fullname" . }}-etcd
   replicas: 3
+  podManagementPolicy: Parallel
   template:
     metadata:
       labels:
@@ -53,6 +54,8 @@ spec:
         component: "etcd"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
+        icpdsupport/serviceInstanceId: {{ template "fullname" . }}
+        icpdsupport/app: {{ template "fullname" . }}
       annotations:
         {{- include "db2oltp.annotations" . | indent 8 }}
     spec:
@@ -61,7 +64,7 @@ spec:
       {{- include "podAntiAffinityEtcd" . | indent 8 }}
       {{- include "tolerations" . | indent 6 }}
       {{- include "root.securityContext" . | indent 6}}
-      serviceAccount: {{ default "default" .Values.global.serviceAccount }}
+      serviceAccountName: {{ default "default" .Values.global.serviceAccount }}
       terminationGracePeriodSeconds: 0
       volumes:
       {{- if .Values.storage.storageLocation.metaStorage.enabled }}

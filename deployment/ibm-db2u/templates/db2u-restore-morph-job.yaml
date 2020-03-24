@@ -32,8 +32,35 @@ spec:
           limits:
             cpu: "200m"
             memory: "100Mi"
-        command: ['/bin/sh']
-        args: ['-cx', '/tools/post-install/condition_ready.sh --replicas {{ .Values.images.db2u.replicas }} --template {{ template "fullname" . }} --namespace {{ .Release.Namespace }} --dbType {{ .Values.global.dbType }}']
+        command:
+          - /bin/bash
+          - -cx
+          - >
+            n=0;
+            rc=0;
+            REPLICAS={{ .Values.images.db2u.replicas }};
+            TMPL="{{ template "fullname" . }}";
+            namespace="{{ .Release.Namespace }}";
+            dbType="{{ .Values.global.dbType }}";
+            TIMEOUT=300;
+            INTERVAL=2;
+            until [[ ${n} -eq ${REPLICAS} ]]; do
+              engnPods=( $(kubectl get pods -n ${namespace} -l component=${dbType},type=engine,app=${TMPL} --no-headers | awk '{print $1}') )
+              for p in "${engnPods[@]}"; do
+                c=0
+                while [[ ${c} -le ${TIMEOUT} ]]; do
+                  kubectl exec ${p} -- ls -1 /db2u/.db2u_initialized
+                  rc=$?
+                  [[ ${rc} -eq 0 ]] && break
+                  echo "(!) Pod ${p} is not ready yet.. sleep ${INTERVAL}"
+                  sleep ${INTERVAL}
+                  ((c++))
+                done;
+                 # Increment replica count
+                [[ ${rc} -eq 0 ]] && { echo "(*) engnPod $p is ready" && ((n++)); };
+              done;
+            done;
+            exit ${rc};
       containers:
       - name: restore-morph
         {{- if .Values.images.tools.image.tag }}

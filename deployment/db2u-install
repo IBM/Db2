@@ -88,7 +88,11 @@ parse_command_line_arguments(){
                 shift
                 storage_class=$1
                 [[ ! -z $existing_pvc ]] && echo "--existing-pvc and --storage-class are mutually exclusive" && exit 2
-                install_args="${install_args} --set storage.storageClassName=${storage_class} --set storage.useDynamicProvisioning=true"
+                ;;
+            --storage-class-data )
+                shift
+                storage_class_data=$1
+                [[ ! -z $existing_pvc ]] && echo "--existing-pvc and --storage-class are mutually exclusive" && exit 2
                 ;;
             --cpu-size )
                 shift
@@ -132,6 +136,25 @@ parse_command_line_arguments(){
         echo "--db-type must one of: db2wh, db2oltp"
         exit 2
     fi
+     if [[ "${storage_class}X" != "X" ]]; then
+        if [[ "${storage_class_data}X" != "X"  ]]; then
+
+            install_args="${install_args}  --set storage.useDynamicProvisioning=true"
+
+            install_args="${install_args} --set storage.enableVolumeClaimTemplates=true"
+            install_args="${install_args} --set storage.storageLocation.dataStorage.enablePodLevelClaim=true"
+            install_args="${install_args} --set storage.storageLocation.dataStorage.enabled=true"
+            install_args="${install_args} --set storage.storageLocation.dataStorage.pvc.claim.storageClassName=${storage_class_data}"
+
+            install_args="${install_args} --set storage.storageLocation.metaStorage.enabled=true"
+            install_args="${install_args} --set storage.storageLocation.metaStorage.volumeType=pvc"
+            install_args="${install_args} --set storage.storageLocation.metaStorage.pvc.claim.useDynamicProvisioning=true"
+            install_args="${install_args} --set storage.storageLocation.metaStorage.pvc.claim.storageClassName=${storage_class}"
+
+         else
+             install_args="${install_args} --set storage.storageClassName=${storage_class} --set storage.useDynamicProvisioning=true"
+        fi
+     fi
 }
 
 usage(){

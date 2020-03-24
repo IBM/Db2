@@ -1,5 +1,5 @@
-{{ if and (.Values.storage.storageLocation.dataStorage.enabled) (eq .Values.storage.storageLocation.dataStorage.volumeType "pvc") -}}
-  {{ if (not .Values.storage.storageLocation.dataStorage.pvc.existingClaim.name) -}}
+{{ if and (not .Values.storage.storageLocation.dataStorage.enablePodLevelClaim) (.Values.storage.storageLocation.dataStorage.enabled) (eq .Values.storage.storageLocation.dataStorage.volumeType "pvc") -}}
+        {{ if (not .Values.storage.storageLocation.dataStorage.pvc.existingClaim.name) -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -10,20 +10,21 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  {{- if .Values.storage.storageLocation.dataStorage.pvc.claim.useDynamicProvisioning }}
+        {{- if .Values.storage.storageLocation.dataStorage.pvc.claim.useDynamicProvisioning }}
   storageClassName: {{ default nil .Values.storage.storageLocation.dataStorage.pvc.claim.storageClassName | quote }}
-  {{- else }}
+        {{- else }}
   storageClassName: {{ .Values.storage.storageLocation.dataStorage.pvc.claim.storageClassName | quote }}
-  {{- end }}
+        {{- end }}
   accessModes:
     - "ReadWriteMany"
   resources:
     requests:
       storage: {{ .Values.storage.storageLocation.dataStorage.pvc.claim.size | quote }}
-    {{- if and (not (empty .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabel)) (not (empty .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabelValue)) }}
+        {{- if and (not (empty .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabel)) (not (empty .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabelValue)) }}
   selector:
     matchLabels:
-      {{ .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabel }}: {{ .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabelValue }}
-    {{- end }}
-  {{- end }}
-{{- end }}
+            {{ .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabel }}: {{ .Values.storage.storageLocation.dataStorage.pvc.claim.volumeLabelValue }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+

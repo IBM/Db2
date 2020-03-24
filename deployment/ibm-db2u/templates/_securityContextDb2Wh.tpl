@@ -41,7 +41,6 @@ securityContext:
   allowPrivilegeEscalation: true
   runAsNonRoot: false
   runAsUser: 0
-  procMount: Default
   capabilities:
     add:
     - "SYS_RESOURCE"

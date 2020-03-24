@@ -9,6 +9,8 @@ metadata:
     component: "ldap"
     heritage: "{{ .Release.Service }}"
     chart: "{{ .Chart.Name }}"
+    icpdsupport/serviceInstanceId: {{ template "fullname" . }}
+    icpdsupport/app: {{ template "fullname" . }}
 spec:
   selector:
     matchLabels:
@@ -25,24 +27,14 @@ spec:
         release: "{{ .Release.Name }}"
         component: "ldap"
         heritage: "{{ .Release.Service }}"
+        icpdsupport/serviceInstanceId: {{ template "fullname" . }}
+        icpdsupport/app: {{ template "fullname" . }}
       annotations:
         {{- include "db2oltp.annotations" .  | indent 8 }}
     spec:
       volumes:
       {{- if .Values.storage.storageLocation.metaStorage.enabled }}
-      - name: {{ .Values.storage.storageLocation.metaStorage.volumeName }}
-        {{- if eq .Values.storage.storageLocation.metaStorage.volumeType "hostPath" }}
-        hostPath:
-          path: {{ .Values.storage.storageLocation.metaStorage.hostPath.path }}
-          type: {{ .Values.storage.storageLocation.metaStorage.hostPath.type }}
-        {{- else }}
-        persistentVolumeClaim:
-          {{- if .Values.storage.storageLocation.metaStorage.pvc.existingClaim.name }}
-          claimName: {{ .Values.storage.storageLocation.metaStorage.pvc.existingClaim.name }}
-          {{- else }}
-          claimName: {{ template "fullname" . }}-db2u-meta-storage
-          {{- end }}
-        {{- end }}
+        {{- include "db2u.container.storage.metaStorage" . | indent 6 }}
       {{- else }}
       - name: {{ template "fullname" . }}-db2u-sqllib-shared
         persistentVolumeClaim:
@@ -55,11 +47,11 @@ spec:
       - name: ldap-secret
         secret:
           secretName: {{ template "fullname" . }}-db2u-ldap
-          defaultMode: 256
+          defaultMode: 292
       - name: bluadmin-secret
         secret:
           secretName: {{ template "fullname" . }}-db2u-ldap-bluadmin
-          defaultMode: 256
+          defaultMode: 292
       {{- include "nodeaffinity" . | indent 6 }}
       {{- include "podAffinityDedicated" . | indent 8 }}
       {{- include "tolerations" . | indent 6 }}
@@ -75,7 +67,7 @@ spec:
           initialDelaySeconds: 10
           exec:
             command:
-            - "/bin/bash"
+            - "/bin/sh"
             - "-c"
             - "supervisorctl status slapd"
           periodSeconds: 30
@@ -86,7 +78,7 @@ spec:
           initialDelaySeconds: 20
           exec:
             command:
-            - "/bin/bash"
+            - "/bin/sh"
             - "-c"
             - "supervisorctl status slapd"
           periodSeconds: 30
