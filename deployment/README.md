@@ -3,6 +3,11 @@
 ## Introduction
 This describes how to install Db2 Community Edition into an OpenShift cluster.
 
+## OpenShift Tested Integrations (Underlying OS levels)
+* Tested Integrations are a defined set of specifically tested configurations provided by Red Hat
+  * OpenShift 3.11, the tested integration matrix is available at https://access.redhat.com/articles/2176281
+  * OpenShift 4.3 the tested integration matrix is available at https://access.redhat.com/articles/4763741
+
 ## Requirements
 * Cluster:
   * OpenShift version ">=3.10.1" "<4.X"
