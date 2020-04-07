@@ -1,8 +1,8 @@
 {{- define "sqllib.containers.securityContext" }}
 securityContext:
-  privileged: false
+  privileged: true
   readOnlyRootFilesystem: false
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   runAsNonRoot: false
   runAsUser: 0
   capabilities:
