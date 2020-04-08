@@ -186,6 +186,8 @@ Usage: ./$(basename $0) --db-type STRING --namespace STRING --release-name STRIN
         --release-name STRING       release name for helm (required)
         --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
         --storage-class STRING      StorageClass to use to dynamically provision a volume
+        --db-partitions             Number of Partitions / MLNs
+        --db-nodes                  Number of Kubernetes Nodes
 
     Helm arguments:
         --home STRING               location of your Helm config. Overrides \$HELM_HOME (default "~/.helm")
