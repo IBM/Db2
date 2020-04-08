@@ -207,7 +207,7 @@ REGISTRY=$(oc registry info)
 ECN=${existing_pvc}
 IMGTAG=v11.5.1.0-CN1
 ETCD_IMGTAG=3.3.10
-declare -i MLNS=$paritions
+declare -i MLNS=$partitions
 declare -i REPL=$nodes
 
 helm install \
