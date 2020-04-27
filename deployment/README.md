@@ -153,7 +153,7 @@ source /opt/ibm/lib/utils.sh
 
 ldapPassword=$(get_ldap_root_password)
 
-echo $(($(ldapsearch -Z -H ldap:/// -D 'cn=bluldap,dc=blustratus,dc=com' -w "$ldapPassword" -b 'dc=blustratus,dc=com' '(objectClass=posixAccount)' | grep uidNumber | cut -d ":" -f 2 | sort -nr | head -n 1)+1)) 
+echo $(($(ldapsearch -Z -H ldap://localhost:50389/ -D 'cn=bluldap,dc=blustratus,dc=com' -w "$ldapPassword" -b 'dc=blustratus,dc=com' '(objectClass=posixAccount)' | grep uidNumber | cut -d ":" -f 2 | sort -nr | head -n 1)+1)) 
 ```
 Example output
 ```
