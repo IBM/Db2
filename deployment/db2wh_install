@@ -1,0 +1,229 @@
+#!/bin/bash
+
+CUR_DIR=$(cd $(dirname $0); pwd)
+
+PRODUCT="Db2 Community Edition"
+CHART="ibm-db2u"
+VALUES_FILE=${CUR_DIR}/${CHART}/values.yaml
+LA_FILE=${CUR_DIR}/${CHART}/LICENSES/LICENSE-LA
+LI_FILE=${CUR_DIR}/${CHART}/LICENSES/LICENSE-LI
+
+helm_args=""
+install_args=""
+db_name="BLUDB"
+
+validate(){
+    which helm &>/dev/null
+    [[ $? -ne 0 ]] && \
+        echo "Unable to find helm binary" && \
+        exit 1
+
+    which less &>/dev/null
+    [[ $? -ne 0 ]] && \
+        echo "The \"more\" binary must be present to view the license" && \
+        exit 1
+
+    helm version --tiller-connection-timeout 10 ${helm_args} &>/dev/null
+    [[ $? -ne 0 ]] && \
+        echo "Unable to connect to tiller using command:" && \
+        echo "helm version ${helm_args}" && \
+        exit 1
+}
+
+prompt_license(){
+    echo -e "About to open License Agreement...\n"
+    echo -e "Use the keys [k] and [j] to scroll up and down"
+    echo -e "Use the key [q] to exit and proceed to prompt\n"
+    sleep 2
+
+    cat ${LA_FILE} ${LI_FILE} > ${CUR_DIR}/.tmp
+    less ${CUR_DIR}/.tmp
+    rm -f ${CUR_DIR}/.tmp
+
+    while true; do 
+        read -p "Do you accept the License Agreement? [y/n] " ans
+
+        case "$ans" in
+        "y"|"Y"|"yes")
+            echo -e "Proceeding to install...\n"
+            break
+            ;;
+        "n"|"N"|"no")
+            echo -e "Exiting...\n"
+            exit 0
+            ;;
+        *)
+            echo -e "Answer must be \"y\" or \"n\"\n"
+            ;;
+        esac
+    done
+}
+
+parse_command_line_arguments(){
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --db-type )
+                shift
+                db_type=$1
+                ;;
+            --db-name )
+                shift
+                db_name=$1
+                ;;
+            --db-partitions )
+                shift
+                partitions=$1
+                ;;
+            --db-nodes )
+                shift
+                nodes=$1
+                ;;
+            --namespace )
+                shift
+                namespace=$1
+                ;;
+            --release-name )
+                shift
+                release_name=$1
+                ;;
+            --existing-pvc )
+                shift
+                existing_pvc=$1
+                [[ ! -z $storage_class ]] && echo "--existing-pvc and --storage-class are mutually exclusive" && exit 2
+                install_args="${install_args} --set storage.existingClaimName=${existing_pvc}"
+                ;;
+            --storage-class )
+                shift
+                storage_class=$1
+                [[ ! -z $existing_pvc ]] && echo "--existing-pvc and --storage-class are mutually exclusive" && exit 2
+                install_args="${install_args} --set storage.storageClassName=${storage_class} --set storage.useDynamicProvisioning=true"
+                ;;
+            --cpu-size )
+                shift
+                install_args="${install_args} --set limit.cpu=${1}"
+                ;;
+            --memory-size )
+                shift
+                install_args="${install_args} --set limit.memory=${1}"
+                ;;
+            --tls )
+                helm_args="${helm_args} --tls"
+                ;;
+            --tiller-namespace )
+                shift
+                helm_args="${helm_args} --tiller-namespace ${1}"
+                ;;
+            --tls-ca-cert )
+                shift
+                helm_args="${helm_args} --tls-ca-cert ${1}"
+                ;;
+            --tls-cert )
+                shift
+                helm_args="${helm_args} --tls-cert ${1}"
+                ;;
+            --tls-key )
+                shift
+                helm_args="${helm_args} --tls-key ${1}"
+                ;;
+            --tls-verify )
+                helm_args="${helm_args} --tls-verify"
+                ;;
+            --home )
+                shift
+                helm_args="${helm_args} --home ${1}"
+                ;;
+            --host )
+                shift
+                helm_args="${helm_args} --host ${1}"
+                ;;
+            --kube-context )
+                shift
+                helm_args="${helm_args} --kube-context ${1}"
+                ;;
+            --help|-h )
+                usage
+                exit 0
+                ;;
+            * )
+                echo "ERROR: $1 is an unrecognized argument"
+                exit 1
+        esac
+        shift
+    done
+
+    if [[ -z $namespace ]]; then
+        echo "--namespace is a required argument"
+        exit 2
+    fi
+
+    if [[ -z $release_name ]]; then
+        echo "--release-name is a required argument"
+        exit 2
+    fi
+
+    if [[ -z $storage_class ]] && [[ -z $existing_pvc ]]; then
+        echo "either --storage-class or --existing-pvc must be provided"
+        exit 2
+    fi
+
+    if [[ "${db_type}X" != "db2oltpX" ]] && [[ "${db_type}X" != "db2whX" ]]; then
+        echo "--db-type must one of: db2wh, db2oltp"
+        exit 2
+    fi
+}
+
+usage(){
+  cat <<EOM
+
+${PRODUCT} Installer
+
+Usage: ./$(basename $0) --db-type STRING --namespace STRING --release-name STRING [--existing-pvc STRING | --storage-class STRING] [OTHER ARGUMENTS...]
+
+    Install arguments:
+        --db-type STRING            the type of database to deplpy. Must be one of: db2wh, db2oltp (required)
+        --db-name STRING            the name of database to deplpy. The default value is BLUDB (optional). The length of the value must not exceed 8 characters
+        --namespace STRING          namespace/project to install ${PRODUCT} into (required)
+        --release-name STRING       release name for helm (required)
+        --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
+        --storage-class STRING      StorageClass to use to dynamically provision a volume
+        --db-partitions             Number of db2 Partitions / MLNs
+        --db-nodes                  Number of Kubernetes Nodes to deply db2 partitions across
+
+    Helm arguments:
+        --home STRING               location of your Helm config. Overrides \$HELM_HOME (default "~/.helm")
+        --host STRING               address of Tiller. Overrides \$HELM_HOST
+        --kube-context STRING       name of the kubeconfig context to use
+
+    Miscellaneous arguments:
+        -h, --help                  display the usage
+EOM
+}
+
+parse_command_line_arguments $@
+validate ${helm_args}
+prompt_license
+
+SVCENAME=${release_name}
+PROJECT=${namespace}
+REGISTRY=$(oc registry info)
+ECN=${existing_pvc}
+IMGTAG=v11.5.1.0-CN1
+ETCD_IMGTAG=3.3.10
+declare -i MLNS=$partitions
+declare -i REPL=$nodes
+
+helm install \
+    --set dedicated=false \
+    --set images.etcd.storage.persisted="false" \
+    --set ldap.enabled="true" \
+    --set mln.total="${MLNS}" \
+    --set images.db2u.replicas="${REPL}" \
+    --set dbType="db2wh" \
+    --set subType="smp" \
+    --set storage.existingClaimName="${ECN}" \
+    --set servicename="${SVCENAME}" \
+    --set ldap.ldap_server="${SVCENAME}-db2u-ldap" \
+    --namespace ${PROJECT} \
+    --name ${SVCENAME} \
+      ${CHART}
+
