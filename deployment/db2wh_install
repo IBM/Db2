@@ -186,7 +186,7 @@ Usage: ./$(basename $0) --db-type STRING --namespace STRING --release-name STRIN
         --release-name STRING       release name for helm (required)
         --existing-pvc STRING       existing PersistentVolumeClaim to use for persistent storage
         --storage-class STRING      StorageClass to use to dynamically provision a volume
-        --db-partitions             Number of db2 Partitions / MLNs
+        --db-partitions             Number of db2 Partitions / db2 MLNs
         --db-nodes                  Number of Kubernetes Nodes to deply db2 partitions across
 
     Helm arguments:
