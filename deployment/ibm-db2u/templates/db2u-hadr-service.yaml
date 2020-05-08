@@ -21,5 +21,4 @@ spec:
   - name: db2u-hadrs
     port: {{ .Values.hadr.standbyPort }}
     targetPort: {{ .Values.hadr.standbyPort }}
-  clusterIP: None
 {{- end }}

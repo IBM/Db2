@@ -29,11 +29,11 @@ spec:
         args: ['-cx', '/Db2wh_preinit/instdb_entrypoint.sh']
         resources:
           requests:
-            cpu: "100m"
-            memory: "50Mi"
-          limits:
             cpu: "200m"
             memory: "100Mi"
+          limits:
+            cpu: "300m"
+            memory: "200Mi"
         env:
         - name: SERVICENAME
           value: "{{ .Values.servicename }}"

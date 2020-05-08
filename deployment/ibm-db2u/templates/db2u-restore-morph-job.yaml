@@ -53,11 +53,11 @@ spec:
             exit $?
         resources:
           requests:
-            cpu: "100m"
-            memory: "50Mi"
-          limits:
             cpu: "200m"
             memory: "100Mi"
+          limits:
+            cpu: "300m"
+            memory: "200Mi"
         volumeMounts:
         - mountPath: /mnt/blumeta0
           {{- if .Values.storage.storageLocation.metaStorage.enabled }}
