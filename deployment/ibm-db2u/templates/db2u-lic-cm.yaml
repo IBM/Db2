@@ -12,21 +12,21 @@ metadata:
 data:
   db2u-lic: |
     [LicenseCertificate]
-    CheckSum=07DFC9F9DC7216727C19F837243E1B6E
-    TimeStamp=1557413058
+    CheckSum=800815E213082A76252E413441361C9D
+    TimeStamp=1557340358
     PasswordVersion=4
     VendorName=IBM Toronto Lab
     VendorPassword=7v8p4fq2dtfpc
     VendorID=5fbee0ee6feb.02.09.15.0f.48.00.00.00
-    ProductName=IBM DB2 Developer-C Edition
-    ProductID=1432
+    ProductName=DB2 Advanced Enterprise Edition
+    ProductID=1448
     ProductVersion=11.5
-    ProductPassword=4ib9sbi5esvnigw5af4u8ccy
-    ProductAnnotation=127 143 255 255 94 255 1 0 0 0-28;#0 16 4 100 1
+    ProductPassword=xei5dscnfnvm4gw6af4u2b72
+    ProductAnnotation=127 143 255 255 94 255 1 0 0 0-27;#0 0 0 0 0
     AdditionalLicenseData=
     LicenseStyle=nodelocked
-    LicenseStartDate=05/09/2019
-    LicenseDuration=6812
+    LicenseStartDate=05/08/2019
+    LicenseDuration=6813
     LicenseEndDate=12/31/2037
     LicenseCount=1
     MultiUseRules=
@@ -52,4 +52,5 @@ data:
     DerivedLicenseStartDate=
     DerivedLicenseEndDate=
     DerivedLicenseAggregateDuration=
+
 

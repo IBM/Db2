@@ -21,7 +21,7 @@ global:
   serviceAccount: db2u
 haRecovery: partial
 hadr:
-  enabled: false
+  enabled: true
   initRole: STANDARD
   peerWindow: '120'
   primaryPort: '60006'
