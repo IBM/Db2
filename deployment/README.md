@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This location is now deprecated, please visit https://github.com/IBM/charts/tree/master/stable/ibm-db2 or https://github.com/IBM/charts/tree/master/stable/ibm-db2warehouse for up-to-date deployments of Db2 and Db2 Warehouse on RedHat OpenShift respectively.
+
 # Db2 Community Edition
 
 ## Introduction
